@@ -1,28 +1,47 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div :class="{ 'sb-nav-fixed': !isLoginPage }">
+    <Navbar v-if="!isLoginPage"></Navbar>
+    <div :id="layoutId">
+      <Sidebar v-if="!isLoginPage"></Sidebar>
+      <div :id="contentId">
+        <router-view></router-view>
+        <Footer v-if="!isLoginPage"></Footer>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Navbar from "./components/Navbar.vue";
+import Sidebar from "./components/Sidebar.vue";
+import Footer from "./components/Footer.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    Navbar,
+    Sidebar,
+    Footer,
+  },
+  mounted() {
+    // console.log(this.$route);
+  },
+  computed: {
+    isLoginPage() {
+      if (this.$route.path === "/login" || this.$route.path === "/registrasi") {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    layoutId() {
+      return this.isLoginPage ? "layoutAuthentication" : "layoutSidenav";
+    },
+    contentId() {
+      return this.isLoginPage
+        ? "layoutAuthentication_content"
+        : "layoutSidenav_content";
+    },
+  },
+};
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
